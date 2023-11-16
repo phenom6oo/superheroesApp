@@ -1,7 +1,10 @@
 package com.superheroes.SuperheroesApp.models.controllers;
+import com.superheroes.SuperheroesApp.models.exceptions.NotFoundException;
 import com.superheroes.SuperheroesApp.models.models.HeroEntity;
 import com.superheroes.SuperheroesApp.models.services.HeroService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,12 +36,25 @@ import java.util.Optional;
     }
 
     @PutMapping("/{id}")
-    public HeroEntity updateHero(@PathVariable Long id, @RequestBody HeroEntity hero) {
-        return heroService.updateHero(id, hero);
+    public ResponseEntity<String> updateHero(@PathVariable Long id, @RequestBody HeroEntity hero) {
+        try {
+            HeroEntity updatedHero = heroService.updateHero(id, hero);
+            return ResponseEntity.ok("Hero updated successfully");
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
+        }
     }
-
     @DeleteMapping("/{id}")
-    public void deleteHero(@PathVariable Long id) {
-        heroService.deleteHero(id);
+    public ResponseEntity<String> deleteHero(@PathVariable Long id) {
+        try {
+            heroService.deleteHero(id);
+            return ResponseEntity.ok("Hero deleted successfully");
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
+        }
     }
 }

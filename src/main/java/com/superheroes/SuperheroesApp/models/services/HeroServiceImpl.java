@@ -1,8 +1,10 @@
 package com.superheroes.SuperheroesApp.models.services;
 
+import com.superheroes.SuperheroesApp.models.exceptions.NotFoundException;
 import com.superheroes.SuperheroesApp.models.models.HeroEntity;
 import com.superheroes.SuperheroesApp.models.repositories.HeroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,12 +46,16 @@ public class HeroServiceImpl implements HeroService {
             hero.setId(id);
             return heroRepository.save(hero);
         } else {
-            throw new IllegalArgumentException("Hero not found with ID: " + id);
+            throw new NotFoundException("Hero not found with ID: " + id);
         }
     }
 
     @Override
     public void deleteHero(Long id) {
-        heroRepository.deleteById(id);
+        try {
+            heroRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException ex) {
+            throw new NotFoundException("Hero not found with ID: " + id);
+        }
     }
 }
