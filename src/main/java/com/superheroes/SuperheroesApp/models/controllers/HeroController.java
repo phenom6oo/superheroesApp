@@ -72,7 +72,7 @@ import org.slf4j.LoggerFactory;
             return ResponseEntity.noContent().build();
         } catch (NotFoundException e) {
             log.error("Error deleting hero with ID {}: {}", id, e.getMessage());
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }

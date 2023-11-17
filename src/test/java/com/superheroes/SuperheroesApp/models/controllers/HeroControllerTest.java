@@ -100,9 +100,6 @@ class HeroControllerTest {
         heroController.deleteHero(1L);
         verify(heroService, times(1)).deleteHero(1L);
     }
-
-    //TODO
-    /*
     @Test
     void testDeleteHeroWithException() {
         doThrow(new NotFoundException("Hero not found with ID: 1")).when(heroService).deleteHero(1L);
@@ -110,5 +107,5 @@ class HeroControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
         assertEquals("Hero not found with ID: 1", responseEntity.getBody());
     }
-*/
+
 }
