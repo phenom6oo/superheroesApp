@@ -5,6 +5,8 @@ import com.superheroes.SuperheroesApp.models.exceptions.NotFoundException;
 import com.superheroes.SuperheroesApp.models.models.HeroEntity;
 import com.superheroes.SuperheroesApp.models.repositories.HeroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ public class HeroServiceImpl implements HeroService {
     public HeroServiceImpl(HeroRepository heroRepository) {
         this.heroRepository = heroRepository;
     }
+    @Cacheable("heroesCache")
     @Timed
     @Override
     public List<HeroEntity> getAllHeroes() {
@@ -36,10 +39,12 @@ public class HeroServiceImpl implements HeroService {
         return heroRepository.findByName(name);
     }
     @Timed
+    @CacheEvict(value = "heroesCache", allEntries = true)
     @Override
     public HeroEntity createHero(HeroEntity hero) {
         return heroRepository.save(hero);
     }
+
     @Timed
     @Override
     public HeroEntity updateHero(Long id, HeroEntity hero) {
