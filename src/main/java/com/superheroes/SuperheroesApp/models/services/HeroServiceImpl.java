@@ -1,5 +1,6 @@
 package com.superheroes.SuperheroesApp.models.services;
 
+import com.superheroes.SuperheroesApp.models.aspect.Timed;
 import com.superheroes.SuperheroesApp.models.exceptions.NotFoundException;
 import com.superheroes.SuperheroesApp.models.models.HeroEntity;
 import com.superheroes.SuperheroesApp.models.repositories.HeroRepository;
@@ -19,7 +20,7 @@ public class HeroServiceImpl implements HeroService {
     public HeroServiceImpl(HeroRepository heroRepository) {
         this.heroRepository = heroRepository;
     }
-
+    @Timed
     @Override
     public List<HeroEntity> getAllHeroes() {
         return heroRepository.findAll();
@@ -34,12 +35,12 @@ public class HeroServiceImpl implements HeroService {
     public List<HeroEntity> getHeroesByName(String name) {
         return heroRepository.findByName(name);
     }
-
+    @Timed
     @Override
     public HeroEntity createHero(HeroEntity hero) {
         return heroRepository.save(hero);
     }
-
+    @Timed
     @Override
     public HeroEntity updateHero(Long id, HeroEntity hero) {
         if (heroRepository.existsById(id)) {
