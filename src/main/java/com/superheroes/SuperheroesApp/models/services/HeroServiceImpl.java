@@ -46,6 +46,7 @@ public class HeroServiceImpl implements HeroService {
     }
 
     @Timed
+    @CacheEvict(value = "heroesCache", allEntries = true)
     @Override
     public HeroEntity updateHero(Long id, HeroEntity hero) {
         if (heroRepository.existsById(id)) {
